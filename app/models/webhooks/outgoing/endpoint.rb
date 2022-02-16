@@ -14,6 +14,7 @@ class Webhooks::Outgoing::Endpoint < ApplicationRecord
   # 🚅 add scopes above.
 
   validates :name, presence: true
+  validates :url, presence: true, allowed_uri: true
   # 🚅 add validations above.
 
   # 🚅 add callbacks above.
