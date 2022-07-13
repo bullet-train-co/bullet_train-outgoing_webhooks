@@ -1,4 +1,4 @@
-class Webhooks::Outgoing::Event < ApplicationRecord
+class Webhooks::Outgoing::Event < BulletTrain::OutgoingWebhooks.base_class.constantize
   include HasUuid
   belongs_to :team
   belongs_to :event_type, class_name: "Webhooks::Outgoing::EventType"

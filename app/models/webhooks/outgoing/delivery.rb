@@ -1,4 +1,4 @@
-class Webhooks::Outgoing::Delivery < ApplicationRecord
+class Webhooks::Outgoing::Delivery < BulletTrain::OutgoingWebhooks.base_class.constantize
   # 🚅 add concerns above.
 
   belongs_to :endpoint, class_name: "Webhooks::Outgoing::Endpoint"

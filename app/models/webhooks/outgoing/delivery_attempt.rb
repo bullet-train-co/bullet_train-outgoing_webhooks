@@ -1,4 +1,4 @@
-class Webhooks::Outgoing::DeliveryAttempt < ApplicationRecord
+class Webhooks::Outgoing::DeliveryAttempt < BulletTrain::OutgoingWebhooks.base_class.constantize
   # 🚅 add concerns above.
 
   belongs_to :delivery
