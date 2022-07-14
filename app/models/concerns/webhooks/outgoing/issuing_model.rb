@@ -20,7 +20,7 @@ module Webhooks::Outgoing::IssuingModel
     parent = send(BulletTrain::OutgoingWebhooks.parent_association)
 
     # Try to find an event type definition for this action.
-    event_type = Webhooks::Outgoing::EventType.find_by(name: "#{self.class.name.underscore}.#{action}")
+    event_type = Webhooks::Outgoing::EventType.find_by(id: "#{self.class.name.underscore}.#{action}")
 
     # If the event type is defined as one that people can be subscribed to,
     # and this object has a team where an associated outgoing webhooks endpoint could be registered.
