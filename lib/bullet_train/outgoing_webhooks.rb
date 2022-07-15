@@ -25,5 +25,9 @@ module BulletTrain
     def self.current_parent_method
       "current_#{parent_association}"
     end
+
+    def self.parent_association_id
+      "#{parent_association}_id".to_sym
+    end
   end
 end
