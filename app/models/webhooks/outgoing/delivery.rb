@@ -2,7 +2,7 @@ class Webhooks::Outgoing::Delivery < BulletTrain::OutgoingWebhooks.base_class.co
   include Webhooks::Outgoing::DeliverySupport
   # 🚅 add concerns above.
 
-  #🚅 add belongs_to associations above.
+  # 🚅 add belongs_to associations above.
 
   # 🚅 add has_many associations above.
 
