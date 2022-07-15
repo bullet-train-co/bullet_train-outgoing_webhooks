@@ -3,7 +3,7 @@ module Webhooks::Outgoing::EventSupport
   include HasUuid
 
   included  do
-    belongs_to :team
+    belongs_to BulletTrain::OutgoingWebhooks.parent_association
     belongs_to :event_type, class_name: "Webhooks::Outgoing::EventType"
     belongs_to :subject, polymorphic: true
     has_many :deliveries, dependent: :destroy
@@ -28,7 +28,7 @@ module Webhooks::Outgoing::EventSupport
   end
 
   def endpoints
-    team.webhooks_outgoing_endpoints.listening_for_event_type_id(event_type_id)
+    send(BulletTrain::OutgoingWebhooks.parent_association).webhooks_outgoing_endpoints.listening_for_event_type_id(event_type_id)
   end
 
   def deliver
