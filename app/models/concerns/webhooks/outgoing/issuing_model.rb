@@ -13,10 +13,16 @@ module Webhooks::Outgoing::IssuingModel
   module ClassMethods
   end
 
-  def generate_webhook(action)
-    # we can only generate webhooks for objects that return their team / parent.
-    return unless respond_to? BulletTrain::OutgoingWebhooks.parent_association
+  def skip_generate_webhook?(action)
+    false
+  end
 
+  def generate_webhook(action)
+    # allow individual models to opt out of generating webhooks
+    return if skip_generate_webhook?(action)
+
+    # we can only generate webhooks for objects that return their their team / parent.
+    return unless respond_to? BulletTrain::OutgoingWebhooks.parent_association
     parent = send(BulletTrain::OutgoingWebhooks.parent_association)
 
     # Try to find an event type definition for this action.
@@ -25,22 +31,27 @@ module Webhooks::Outgoing::IssuingModel
     # If the event type is defined as one that people can be subscribed to,
     # and this object has a team where an associated outgoing webhooks endpoint could be registered.
     if event_type && parent
-
       # Only generate an event record if an endpoint is actually listening for this event type.
-      if parent.webhooks_outgoing_endpoints.listening_for_event_type_id(event_type.id).any?
-        data = "Api::V1::#{self.class.name}Serializer".constantize.new(self).serializable_hash[:data]
-        webhook = parent.webhooks_outgoing_events.create(event_type_id: event_type.id, subject: self, data: data)
-        webhook.deliver
+      if parent.endpoints_listening_for_event_type?(event_type)
+        # serialization can be heavy so run it as a job
+        Webhooks::Outgoing::GenerateJob.perform_later(self, action)
       end
     end
   end
 
+  def generate_webhook_perform(action)
+    event_type = Webhooks::Outgoing::EventType.find_by(id: "#{self.class.name.underscore}.#{action}")
+    data = "Api::V1::#{self.class.name}Serializer".constantize.new(self).serializable_hash[:data]
+    webhook = team.webhooks_outgoing_events.create(event_type_id: event_type.id, subject: self, data: data)
+    webhook.deliver
+  end
+
   def generate_created_webhook
-    generate_webhook("created")
+    generate_webhook(:created)
   end
 
   def generate_updated_webhook
-    generate_webhook("updated")
+    generate_webhook(:updated)
   end
 
   def generate_deleted_webhook
