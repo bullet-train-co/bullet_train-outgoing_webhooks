@@ -16,6 +16,8 @@ class Webhooks::Outgoing::Endpoint < ApplicationRecord
   validates :name, presence: true
   # 🚅 add validations above.
 
+  after_save :touch_team
+
   # 🚅 add callbacks above.
 
   # 🚅 add delegations above.
@@ -26,6 +28,11 @@ class Webhooks::Outgoing::Endpoint < ApplicationRecord
 
   def event_types
     event_type_ids.map { |id| Webhooks::Outgoing::EventType.find(id) }
+  end
+
+  # touch team to invalidate endpoints_listening_for_event_type? cache
+  def touch_team
+    team.touch
   end
 
   # 🚅 add methods above.
