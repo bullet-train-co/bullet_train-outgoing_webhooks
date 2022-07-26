@@ -1,5 +1,6 @@
 module Webhooks::Outgoing::DeliveryAttemptSupport
   extend ActiveSupport::Concern
+  include Webhooks::Outgoing::UriFiltering
 
   included do
     SUCCESS_RESPONSE_CODES = [200, 201, 202, 203, 204, 205, 206, 207, 226].freeze

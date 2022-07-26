@@ -40,8 +40,8 @@ module Webhooks::Outgoing::UriFiltering
   class AllowedUriValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
       uri = URI.parse(value)
-      unless allowed_uri?(uri)
-        record.errors[attribute] << "is not an allowed uri"
+      unless record.allowed_uri?(uri)
+        record.errors.add attribute, "is not an allowed uri"
       end
     end
   end

@@ -11,6 +11,10 @@ class Webhooks::Outgoing::UriFilteringTest < ActiveSupport::TestCase
     def to_global_id
       "dummy_id"
     end
+
+    def persisted?
+      true
+    end
   end
 
   def assert_allowed_uri(uri)

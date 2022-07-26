@@ -17,7 +17,7 @@ module Webhooks::Outgoing::IssuingModel
     false
   end
 
-  def generate_webhook(action)
+  def generate_webhook(action, async: true)
     # allow individual models to opt out of generating webhooks
     return if skip_generate_webhook?(action)
 
@@ -33,8 +33,12 @@ module Webhooks::Outgoing::IssuingModel
     if event_type && parent
       # Only generate an event record if an endpoint is actually listening for this event type.
       if parent.endpoints_listening_for_event_type?(event_type)
-        # serialization can be heavy so run it as a job
-        Webhooks::Outgoing::GenerateJob.perform_later(self, action)
+        if async
+          # serialization can be heavy so run it as a job
+          Webhooks::Outgoing::GenerateJob.perform_later(self, action)
+        else
+          generate_webhook_perform(action)
+        end
       end
     end
   end
@@ -65,6 +69,6 @@ module Webhooks::Outgoing::IssuingModel
       return false
     end
 
-    generate_webhook("deleted")
+    generate_webhook(:deleted, async: false)
   end
 end
