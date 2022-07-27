@@ -140,8 +140,6 @@ module Webhooks::Outgoing::UriFiltering
       config[:blocked_cidrs].each do |cidr|
         return false if IPAddr.new(cidr).include?(resolved_ip)
       end
-
-      
     rescue IPAddr::InvalidAddressError
       return false
     end

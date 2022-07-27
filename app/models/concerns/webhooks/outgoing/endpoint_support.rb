@@ -12,7 +12,7 @@ module Webhooks::Outgoing::EndpointSupport
 
     validates :name, presence: true
 
-    before_validation { self.url&.strip! }
+    before_validation { url&.strip! }
 
     validates :url, presence: true, allowed_uri: true
 
