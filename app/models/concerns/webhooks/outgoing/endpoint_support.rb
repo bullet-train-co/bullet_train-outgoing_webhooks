@@ -14,8 +14,7 @@ module Webhooks::Outgoing::EndpointSupport
 
     before_validation { self.url&.strip! }
 
-    validates :url, presence: true
-    validates :url, allowed_uri: true, if: -> { url.present? }
+    validates :url, presence: true, allowed_uri: true
 
     after_initialize do
       self.event_type_ids ||= []
