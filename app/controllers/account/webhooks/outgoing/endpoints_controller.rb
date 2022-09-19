@@ -2,6 +2,10 @@ class Account::Webhooks::Outgoing::EndpointsController < Account::ApplicationCon
   account_load_and_authorize_resource :endpoint, through: BulletTrain::OutgoingWebhooks.parent_association, through_association: :webhooks_outgoing_endpoints
   before_action { @parent = instance_variable_get("@#{BulletTrain::OutgoingWebhooks.parent_association}") }
 
+  # TODO: Account::ApplicationController extends this module so we shouldn't have to call this,
+  # but `assign_checkboxes` below is raising an undefined method error.
+  include Fields::ControllerSupport
+
   # GET /account/teams/:team_id/webhooks/outgoing/endpoints
   # GET /account/teams/:team_id/webhooks/outgoing/endpoints.json
   def index
