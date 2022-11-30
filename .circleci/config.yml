@@ -114,7 +114,6 @@ jobs:
       - run: "cd tmp/starter && yarn build:css"
       - run: "cd tmp/starter && bundle exec rails bullet_train_outgoing_webhooks_engine:install:migrations && bundle exec rails db:migrate"
 
-
       - *wait_for_docker
 
       - run:
