@@ -27,12 +27,21 @@ module Webhooks::Outgoing::EventSupport
     payload.dig("event_type")
   end
 
-  def endpoints
-    send(BulletTrain::OutgoingWebhooks.parent_association).webhooks_outgoing_endpoints.listening_for_event_type_id(event_type_id)
+  def endpoints(object)
+    endpoints = send(BulletTrain::OutgoingWebhooks.parent_association).webhooks_outgoing_endpoints.listening_for_event_type_id(event_type_id)
+
+    case object.class.name
+    when "Scaffolding::AbsolutelyAbstract::CreativeConcept"
+      endpoints.where(scaffolding_absolutely_abstract_creative_concept_id: [object.id, nil])
+    when "Scaffolding::CompletelyConcrete::TangibleThing"
+      endpoints.where(scaffolding_absolutely_abstract_creative_concept_id: [object.absolutely_abstract_creative_concept_id, nil])
+    else
+      endpoints
+    end
   end
 
-  def deliver
-    endpoints.each do |endpoint|
+  def deliver(object)
+    endpoints(object).each do |endpoint|
       unless endpoint.deliveries.where(event: self).any?
         endpoint.deliveries.create(event: self, endpoint_url: endpoint.url).deliver_async
       end
