@@ -112,6 +112,7 @@ jobs:
       - run: "cd tmp/starter && yarn install"
       - run: "cd tmp/starter && yarn build"
       - run: "cd tmp/starter && yarn build:css"
+      - run: "cd tmp/starter && bundle exec rails bullet_train_outgoing_webhooks_engine:install:migrations"
 
       - *wait_for_docker
 
@@ -171,7 +172,6 @@ jobs:
       - *wait_for_docker
 
       - run: "cd tmp/starter && bundle add spring"
-      - run: "cd tmp/starter && bundle exec rails bullet_train_outgoing_webhooks_engine:install:migrations"
       - run:
           name: 'Setup Super Scaffolding System Test'
           command: "cd tmp/starter && bundle exec test/bin/setup-super-scaffolding-system-test"
