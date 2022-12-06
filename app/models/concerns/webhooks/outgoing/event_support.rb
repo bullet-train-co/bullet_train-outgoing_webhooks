@@ -27,10 +27,10 @@ module Webhooks::Outgoing::EventSupport
     payload.dig("event_type")
   end
 
-  def endpoints(object)
+  def endpoints
     endpoints = send(BulletTrain::OutgoingWebhooks.parent_association).webhooks_outgoing_endpoints.listening_for_event_type_id(event_type_id)
 
-    case object.class.name
+    case self.class.name
     when "Scaffolding::AbsolutelyAbstract::CreativeConcept"
       endpoints.where(scaffolding_absolutely_abstract_creative_concept_id: [object.id, nil])
     when "Scaffolding::CompletelyConcrete::TangibleThing"
@@ -40,8 +40,8 @@ module Webhooks::Outgoing::EventSupport
     end
   end
 
-  def deliver(object)
-    endpoints(object).each do |endpoint|
+  def deliver
+    endpoints.each do |endpoint|
       unless endpoint.deliveries.where(event: self).any?
         endpoint.deliveries.create(event: self, endpoint_url: endpoint.url).deliver_async
       end

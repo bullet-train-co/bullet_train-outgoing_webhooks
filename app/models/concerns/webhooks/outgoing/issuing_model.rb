@@ -49,7 +49,7 @@ module Webhooks::Outgoing::IssuingModel
     # Does Jbuilder support generating a hash instead of a JSON string?
     data = JSON.parse(to_api_json)
     webhook = send(BulletTrain::OutgoingWebhooks.parent_association).webhooks_outgoing_events.create(event_type_id: event_type.id, subject: self, data: data)
-    webhook.deliver(self)
+    webhook.deliver
   end
 
   def generate_created_webhook

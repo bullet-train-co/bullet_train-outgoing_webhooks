@@ -29,7 +29,7 @@ module Webhooks::Outgoing::EndpointSupport
   end
 
   def creative_concepts
-    Scaffolding::AbsolutelyAbstract::CreativeConcept.all
+    team.scaffolding_absolutely_abstract_creative_concepts
   end
 
   def event_types

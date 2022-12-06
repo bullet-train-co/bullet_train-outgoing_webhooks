@@ -112,3 +112,4 @@ en:
         # 🚅 super scaffolding will insert new activerecord attributes above this line.
         created_at: *created_at
         updated_at: *updated_at
+        scaffolding_absolutely_abstract_creative_concept_id: *scaffolding_absolutely_abstract_creative_concept_id
